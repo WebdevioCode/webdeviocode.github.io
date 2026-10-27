@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <title>Number guessing game</title>
+    </head>
+    <body class="flex justify-center">
+            <main class="shadow-2xl h-screen flex flex-col justify-center p-3 absolute">
+                <h1 class="font-bold text-3xl">Number guessing game</h1>
+                <p class="font-light text-2xl">Guess the number!</p>
+                <br>
+
+                <section class="flex justify-around">
+                    <button class="border p-3 rounded-lg cursor-pointer 
+                        w-full mr-5 hover:bg-gray-100 transition active:scale-97"
+                        id="yes">
+                        Yes
+                    </button>
+
+                    <div class="flex flex-col items-center font-semibold">
+                        <p>Is</p>
+                        <p class="p-3 rounded-lg text-4xl" id="number">
+                            0
+                        </p>
+                        <p>lower?</p>
+                    </div>
+
+                    <button class="border p-3 rounded-lg cursor-pointer 
+                        w-full ml-5 hover:bg-gray-100 transition active:scale-97"
+                        id="no">
+                        No
+                    </button>
+                </section>
+
+                <div class="flex justify-center mt-5">
+                    <input type="text" placeholder="Final number" id="final-number"
+                    class="border p-3 rounded-lg">
+
+                    <button class="p-3 rounded-lg ml-3 bg-green-300 
+                        text-black cursor-pointer active:scale-95 transition"
+                        id="submit-btn">
+                        Submit
+                    </button>
+                </div>
+                <hr class="m-5">
+                <div class="flex flex-col items-center">
+                    <p id="temp" class="text-2xl"><span id="tries">3</span> tries remaining</p>
+                    <p id="tempText2"></p>
+                </div>
+            </main>
+            <script>
+                const yes = document.querySelector("#yes")
+                const no = document.querySelector("#no")
+                const submitBtn = document.querySelector("#submit-btn")
+                const tempText = document.querySelector("#temp")
+                const tempText2 = document.querySelector("#tempText2")
+                const tries = document.querySelector("#tries")
+                const finalnumber = document.querySelector("#final-number")
+                const number = document.querySelector("#number")
+
+                let triesLeft = 3
+                const numberFinal = Math.floor(Math.random() * 10)
+                let numberIndex = Math.floor(Math.random() * 10)
+
+                submitBtn.disabled = true
+                number.textContent = numberIndex
+
+
+                function restartGame() {
+                    yes.disabled = true;
+                    no.disabled = true;
+                    tempText2.textContent = "Restarting in 1 second";
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                }
+                function enableSubmitBtn() {
+                    submitBtn.disabled = false
+
+                }
+
+                yes.addEventListener("click", () => {
+                    if (numberFinal == numberIndex) {
+                        tempText.textContent = `You got it with ${triesLeft} tries left`
+                        restartGame()
+                    } else {
+                        if (triesLeft <= 0) {
+                            tempText.textContent = `You lost the number was ${numberFinal}`
+                            restartGame()
+                            return
+
+                        } else {
+                            if (triesLeft == 1) {
+                                enableSubmitBtn()
+                            } 
+                            if (numberFinal > numberIndex) {
+                                tempText2.textContent = `The number his higher than ${numberIndex}`
+                                triesLeft --
+                                numberIndex = Math.floor(Math.random() * 10)
+                                number.textContent = numberIndex
+                                tries.textContent = triesLeft
+                            } else {
+                                tempText2.textContent = `The number is lower than ${numberIndex}`
+                                triesLeft --
+                                numberIndex = Math.floor(Math.random() * 10)
+                                number.textContent = numberIndex
+                                tries.textContent = triesLeft
+                            }
+                        }
+                    }
+                })
+
+                no.addEventListener("click", () => {
+                    if (triesLeft <= 0) {
+                        tempText.textContent = `You lost the number was ${numberFinal}`
+                        restartGame()
+                        return
+
+                    } else {
+                        if (triesLeft == 1) {
+                            enableSubmitBtn()
+                        }
+                        if (numberFinal > numberIndex) {
+                                tempText2.textContent = `The number his higher than ${numberIndex}`
+                                triesLeft --
+                                numberIndex = Math.floor(Math.random() * 10)
+                                number.textContent = numberIndex
+                                tries.textContent = triesLeft
+                            } else {
+                                tempText2.textContent = `The number is lower than ${numberIndex}`
+                                triesLeft --
+                                if (triesLeft == 1) {
+                                    submitBtn.disabled = false
+                                }
+                                numberIndex = Math.floor(Math.random() * 10)
+                                number.textContent = numberIndex
+                                tries.textContent = triesLeft
+                            }
+                    }
+                })
+
+                submitBtn.addEventListener("click", () => {
+                    const finalNumber = finalnumber.value
+                    if (finalNumber == numberFinal) {
+                        tempText.textContent = `You got it with ${triesLeft} tries left`
+                        restartGame()
+
+                    } else {
+                        if (triesLeft == 0) {
+                            tempText.textContent = `You lost the number was ${numberFinal}`
+                            restartGame()
+                            return
+                        } else {
+                            if (numberFinal > finalNumber) {
+                                tempText2.textContent = `The number his higher than ${finalNumber}`
+                                triesLeft --
+                                numberIndex = Math.floor(Math.random() * 10)
+                                number.textContent = numberIndex
+                                tries.textContent = triesLeft
+                            } else {
+                                tempText2.textContent = `The number is lower than ${finalNumber}`
+                                triesLeft --
+                                numberIndex = Math.floor(Math.random() * 10)
+                                number.textContent = numberIndex
+                                tries.textContent = triesLeft
+                            }
+                        }
+                    }
+                })
+
+            </script>
+        </body>
+</html>
