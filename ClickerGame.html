@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    </head>
+    <body class="h-screen flex justify-center items-center
+            bg-linear-to-b from-slate-900 via-purple-950 to-slate-900">
+        
+        <main class=" shadow-2xl shadow-black p-4 flex 
+                flex-col justify-center bg-[rgb(33,33,33)] text-white rounded-lg w-2/3">
+            
+                <div>
+                <p class="font-semibold flex justify-center items-center border rounded-[50px]
+                    p-2" 
+                    id="temptext"
+                    ></p>
+                <h1 class="text-3xl font-bold">Clicker Game</h1>
+                </div>
+            <p class="font-light">Click to gain score</p>
+            
+            <p class="text-xl font-semibold mb-1">Score:
+                    <span id="score">0</span></p>
+            <section class="flex flex-col items-center">
+                <button class="mt-2 border p-4 w-full
+                        hover:bg-white/10 cursor-pointer 
+                        active:scale-95 transition active:rounded-[15px] rounded-[10px]"
+                        id="increase"
+                        >Increase</button>
+                <button class="mt-3 border p-4 w-full
+                        hover:bg-white/10 cursor-pointer 
+                        active:scale-95 transition active:rounded-[15px] rounded-[10px]"
+                        id="decrease"
+                        >Decrease</button>
+                <button class="mt-3 border p-4 w-full
+                        hover:bg-white/10 cursor-pointer 
+                        active:scale-95  transition active:rounded-[15px] rounded-[10px]"
+                        id="reset"
+                        >Reset</button>
+                <button class="mt-3 border p-4 w-full
+                        hover:bg-white/10 transition cursor-pointer 
+                        active:scale-95 active:rounded-[15px] mb-2 rounded-[10px]"
+                        id="upgradebtn"
+                        >Upgrade</button>
+            </section>
+            
+            <hr class="mt-3">
+            <h1 class="font-bold text-xl mt-2 mb-2">Statistics</h1>
+            <section>
+                <p class="font-semibold">All time clicks: 
+                    <span class="font-light" id="clicksalltime"
+                    >0</span></p>
+                <p class="font-semibold">Current upgrade lvl : 
+                    <span class="font-light" id="allupgrades"
+                    >0</span></p>
+                <p class="font-semibold">Highest score: 
+                    <span class="font-light" id="highestscore"
+                    >0</span></p>
+                <p class="font-semibold">Amount of resets: 
+                    <span class="font-light" id="amountofreset"
+                    >0</span></p>
+            </section>
+        </main>
+        <script>
+            const increase = document.querySelector("#increase")
+const decrease = document.querySelector("#decrease")
+const reset = document.querySelector("#reset")
+const score = document.querySelector("#score")
+const upgradeBtn = document.querySelector("#upgradebtn")
+const tempText = document.querySelector("#temptext")
+const allTimeClicksText = document.querySelector("#clicksalltime")
+const AllupgradesText = document.querySelector("#allupgrades")
+const highestScoreText = document.querySelector("#highestscore")
+const resetText = document.querySelector("#amountofreset")
+
+
+let Clicks1000 = false
+let highScore1m = false
+let upgradeLvl20 = false
+
+
+let upgrade = 1
+let upgradesIndex = 50
+let count = 0
+let Clicks = 0
+let upgradeLvl = 0
+let highScore = 0
+let resets = 0
+
+function saveGame() {
+    localStorage.setItem("count", count)
+    localStorage.setItem("clicks", Clicks)
+    localStorage.setItem("highScore", highScore)
+    localStorage.setItem("upgrades", upgradeLvl)
+    localStorage.setItem("upgradePower", upgrade)
+    localStorage.setItem("resets", resets)
+    localStorage.setItem("upgradesIndex", upgradesIndex)
+    localStorage.setItem("highscore1m", highScore1m)
+    localStorage.setItem("clicks1k",Clicks1000)
+}
+
+function loadGame() {
+    count = Number(localStorage.getItem("count")) || 0
+    Clicks = Number(localStorage.getItem("clicks")) || 0
+    highScore = Number(localStorage.getItem("highScore")) || 0
+    upgradeLvl = Number(localStorage.getItem("upgrades")) || 0
+    upgrade = Number(localStorage.getItem("upgradePower")) || 1
+    resets = Number(localStorage.getItem("resets")) || 0
+    upgradesIndex = Number(localStorage.getItem("upgradesIndex")) || 50
+    highScore1m = localStorage.getItem("highscore1m") || false
+    Clicks1000 = localStorage.getItem("clicks1k") || false
+
+    score.textContent = count
+    allTimeClicksText.textContent = Clicks
+    highestScoreText.textContent = highScore
+    AllupgradesText.textContent = upgradeLvl
+    resetText.textContent = resets
+}
+
+loadGame()
+
+function text() {
+    setTimeout(() => {
+        tempText.textContent = ""
+        tempText.style.color = "white"
+        tempText.classList.add("hidden")
+    },1000)
+}
+function removeHidden() {
+    tempText.classList.remove("hidden")
+}
+
+increase.addEventListener("click", () => {
+    count += upgrade
+    score.textContent = count
+    if (count > highScore) {
+        highScore = count
+        highestScoreText.textContent = highScore
+    }
+    if (Clicks == 1000 && Clicks1000 == false) {
+        window.alert("You got to 1k clicks well done")
+        Clicks1000 = true
+    }
+    if (highScore >= 1000000 && highScore1m == false) {
+        window.alert("You got a highscore of 1m well done")
+        highScore1m = true
+    }
+    Clicks ++
+    allTimeClicksText.textContent = Clicks
+    saveGame()
+    
+})
+
+decrease.addEventListener("click", () => {
+    if (count == 0) {
+        count ++
+        tempText.style.color = "red"
+        removeHidden()
+        tempText.style.borderColor = "white"
+        tempText.textContent = "You cant go below 0"
+        text()
+    } else {
+        count --
+        score.textContent = count
+    }
+})
+
+reset.addEventListener("click", () => {
+    if (count == 0) {
+        count ++
+        tempText.style.color = "red"
+        removeHidden()
+        tempText.style.borderColor = "white"
+        tempText.textContent = "You are already at 0"
+        text()
+    } else {
+        resets ++ 
+        resetText.textContent = resets
+        saveGame()
+        count = 0
+        score.textContent = count
+    }
+})
+
+upgradeBtn.addEventListener("click", () => {
+    if (count >= upgradesIndex) {
+        upgradeLvl ++
+        AllupgradesText.textContent = upgradeLvl
+        upgrade *= 2
+        upgradesIndex *= 2
+        removeHidden()
+        tempText.style.color = "green"
+        tempText.style.borderColor = "white"
+        tempText.textContent = "UPGRADE"
+        count = 0
+        score.textContent = count
+        if (upgradelvl20 == 20 && upgdesLvl20 == false) {
+            window.alert("You got to upgrade lvl 20 well done")
+            upgradelvl20 = true
+        }
+        text()
+        saveGame()
+    } else {
+        removeHidden()
+        tempText.style.color = "red"
+        tempText.style.borderColor = "white"
+        tempText.textContent = `You need ${upgradesIndex} score to upgrade`
+        text()
+    }
+})
+        </script>
+    </body>
+</html>
